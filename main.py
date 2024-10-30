@@ -61,12 +61,17 @@ def create_movie_poster(movie_title: str, images: list[any], label: str, save_or
             os.remove(original_image_path)
 
 
-def generate_movie_posters(movie_title: str, movie_id: int, save_original: bool) -> None:
+def generate_movie_posters(
+        movie_title: str,
+        movie_id: int,
+        save_original: bool,
+        poster_languages: list[str] | None = None) -> None:
     """
     Fetch and process movie posters by downloading, optionally saving originals,
     and creating a customized movie poster for each image.
 
     Args:
+        :param poster_languages: (list[str] | None) List of languages of movie posters.
         :param movie_title: (str) The title of the movie.
         :param movie_id: (int) The unique identifier for the movie on TMDB.
         :param save_original: (bool) Whether to save the original poster images.
@@ -79,7 +84,7 @@ def generate_movie_posters(movie_title: str, movie_id: int, save_original: bool)
     ensure_directories_exist(["originals", "posters"])
 
     # Fetch images from TMDB.
-    movie_images: dict[str, any] = fetch_movie_images(movie_id)
+    movie_images: dict[str, any] = fetch_movie_images(movie_id=movie_id, languages=poster_languages)
     if not movie_images:
         print("Failed to fetch movie images.")
         return
@@ -107,4 +112,8 @@ MOVIE_ID: int = 933260
 SAVE_ORIGINAL: bool = False  # Set this to True if you want to save the original posters.
 
 if __name__ == "__main__":
-    generate_movie_posters(MOVIE_TITLE, MOVIE_ID, SAVE_ORIGINAL)
+    generate_movie_posters(
+        movie_title=MOVIE_TITLE,
+        movie_id=MOVIE_ID,
+        save_original=SAVE_ORIGINAL,
+        poster_languages=POSTER_LANGUAGES)
